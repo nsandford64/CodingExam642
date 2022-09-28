@@ -3,11 +3,13 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('This API is working correctly!');
+  res.send( req )
 });
 
-router.get("/test", function( req, res, nex) {
-  res.send( "You're at the test directory");
-} );
+router.post('/test', (req, res) => {
+  res.send({
+    answer: `You requested: ${req.body.answer}`
+  })
+});
 
 module.exports = router;
