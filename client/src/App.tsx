@@ -1,6 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Button, Intent } from '@blueprintjs/core';
 
 const App = React.memo(() => {
 
@@ -16,21 +15,7 @@ const App = React.memo(() => {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {state}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <button onClick={callApi}>Click me!</button>
-      </header>
+      <Button intent={Intent.PRIMARY} minimal onClick={callApi} text="Click me!" />
     </div>
   );
 } )
