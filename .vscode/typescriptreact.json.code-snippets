@@ -26,7 +26,8 @@
 			"const Styled${1:ComponentName} = styled.div`\n\t\n`\n",
 			"const ${1:ComponentName} = React.memo( ( props: ${1:ComponentName}Props ) => {\n",
 			"\treturn (\n\t\tnull\n\t)",
-			"})\n"
+			"})\n",
+			"${1:ComponentName}.displayName = \"${1:ComponentName}\"\n"
 		],
 		"description": "Create a new TSX Component"
 	}

@@ -1,6 +1,6 @@
-import { Radio, RadioGroup } from "@blueprintjs/core";
-import * as React from "react";
-import styled from "styled-components";
+import { Radio, RadioGroup } from "@blueprintjs/core"
+import * as React from "react"
+import styled from "styled-components"
 
 interface TrueFalseProps {
     question: string
@@ -14,27 +14,27 @@ const StyledTrueFalse = styled.div`
 
 export const TrueFalse = React.memo( ( props: TrueFalseProps ) => {
 
-    const [ index, setIndex ] = React.useState( -1 );
+	const [ index, setIndex ] = React.useState( -1 )
 
-    const handleChange = React.useCallback( ( e: React.FormEvent<HTMLInputElement> )  => {
-        const value = parseInt( (e.target as HTMLInputElement).value )
+	const handleChange = React.useCallback( ( e: React.FormEvent<HTMLInputElement> )  => {
+		const value = parseInt( (e.target as HTMLInputElement).value )
 
-        setIndex( value )
-        props.setAnswer( value )
-    }, [props] )
+		setIndex( value )
+		props.setAnswer( value )
+	}, [props] )
 
-    return (
-        <StyledTrueFalse>
-            <RadioGroup
-                label={props.question}
-                onChange={handleChange}
-                selectedValue={index}
-            >
-                {props.answers.map( ( answer, index ) => (
-                    <Radio label={answer} value={index} />
-                ) )}
-            </RadioGroup>
-        </StyledTrueFalse>
-    )
+	return (
+		<StyledTrueFalse>
+			<RadioGroup
+				label={props.question}
+				onChange={handleChange}
+				selectedValue={index}
+			>
+				{props.answers.map( ( answer, index ) => (
+					<Radio key={index} label={answer} value={index} />
+				) )}
+			</RadioGroup>
+		</StyledTrueFalse>
+	)
 } )
- 
+TrueFalse.displayName = "TrueFalse"
