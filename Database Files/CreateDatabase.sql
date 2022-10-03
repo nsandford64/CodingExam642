@@ -1,6 +1,6 @@
 SET search_path TO 'CodingExam';
 
-DROP TABLE IF EXISTS "CodingExam".CourseInstructor;
+DROP TABLE IF EXISTS "CodingExam".CourseUser;
 DROP TABLE IF EXISTS "CodingExam".StudentExam;
 DROP TABLE IF EXISTS "CodingExam".QuestionAnswer;
 DROP TABLE IF EXISTS "CodingExam".ExamQuestion;
@@ -8,14 +8,14 @@ DROP TABLE IF EXISTS "CodingExam".QuestionType;
 DROP TABLE IF EXISTS "CodingExam".StudentResponse;
 DROP TABLE IF EXISTS "CodingExam".Student;
 DROP TABLE IF EXISTS "CodingExam".Exam;
-DROP TABLE IF EXISTS "CodingExam".Instructor;
+DROP TABLE IF EXISTS "CodingExam".Users;
 DROP TABLE IF EXISTS "CodingExam".Course;
 
-CREATE TABLE "CodingExam".Instructor
+CREATE TABLE "CodingExam".Users
 (
-	InstructorID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	CanvasInstructorID VARCHAR(60) NOT NULL,
-	UNIQUE(CanvasInstructorID)
+	UserID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	CanvasUserID VARCHAR(60) NOT NULL,
+	UNIQUE(CanvasUserID)
 );
 
 CREATE TABLE "CodingExam".Course
@@ -25,11 +25,11 @@ CREATE TABLE "CodingExam".Course
 	UNIQUE(CanvasCourseID)
 );
 
-CREATE TABLE "CodingExam".CourseInstructor
+CREATE TABLE "CodingExam".CourseUser
 (
 	CourseID INT NOT NULL REFERENCES "CodingExam".Course(CourseID),
-	InstructorID INT NOT NULL REFERENCES "CodingExam".Instructor(InstructorID),
-	PRIMARY KEY(CourseID, InstructorID)
+	UserID INT NOT NULL REFERENCES "CodingExam".Users(UserID),
+	PRIMARY KEY(CourseID, UserID)
 );
 
 CREATE TABLE "CodingExam".Exam
@@ -61,7 +61,8 @@ CREATE TABLE "CodingExam".QuestionAnswer
 (
 	AnswerID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID),
-	CorrectAnswer INT NOT NULL
+	CorrectAnswer BOOLEAN NOT NULL,
+	AnswerText VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE "CodingExam".Student
@@ -90,13 +91,23 @@ CREATE TABLE "CodingExam".StudentResponse
 	--need to add check constraint for bool value
 );
 
+INSERT INTO "CodingExam".Users(CanvasUserID)
+VALUES ('abcdefg1234567');
 
+INSERT INTO "CodingExam".Course(CanvasCourseID)
+VALUES ('abcdef123456');
 
+INSERT INTO "CodingExam".CourseUser(CourseID, UserID)
+VALUES (1, 1);
 
+INSERT INTO "CodingExam".Exam(CourseID, CanvasExamID, TotalPoints)
+VALUES (1, '12345abcde', 1);
 
+INSERT INTO "CodingExam".QuestionType(QuestionType)
+VALUES ('True or False');
 
+INSERT INTO "CodingExam".ExamQuestion(QuestionText, HasCorrectAnswers, QuestionType, ExamID)
+VALUES ('What''s the best programming language?', TRUE, 1, 1);
 
-
-
-
-
+INSERT INTO "CodingExam".QuestionAnswer(QuestionID, CorrectAnswer, AnswerText)
+VALUES (1, TRUE, 'C#'), (1, TRUE, 'C'), (1, TRUE, 'TypeScript'), (1, TRUE, 'Fortran');
