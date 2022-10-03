@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
+const ltiRouter = require('./routes/lti');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/lti', ltiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -17,7 +17,7 @@ const App = React.memo(() => {
   const [ state, setState ] = React.useState( "" );
 
   const callApi = React.useCallback( async () => {
-    const res = await fetch( "http://localhost:9000/api/test", {
+    const res = await fetch( "http://localhost:9000/lti", {
       // Adding method type
       method: "POST",
      
