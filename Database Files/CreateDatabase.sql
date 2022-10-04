@@ -1,3 +1,4 @@
+--Copyright 2022 under MIT License
 SET search_path TO 'CodingExam';
 
 DROP TABLE IF EXISTS "CodingExam".CourseUser;
