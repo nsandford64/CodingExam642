@@ -2,10 +2,10 @@ SET search_path TO 'CodingExam';
 
 DROP TABLE IF EXISTS "CodingExam".CourseUser;
 DROP TABLE IF EXISTS "CodingExam".StudentExam;
+DROP TABLE IF EXISTS "CodingExam".StudentResponse;
 DROP TABLE IF EXISTS "CodingExam".QuestionAnswer;
 DROP TABLE IF EXISTS "CodingExam".ExamQuestion;
 DROP TABLE IF EXISTS "CodingExam".QuestionType;
-DROP TABLE IF EXISTS "CodingExam".StudentResponse;
 DROP TABLE IF EXISTS "CodingExam".Student;
 DROP TABLE IF EXISTS "CodingExam".Exam;
 DROP TABLE IF EXISTS "CodingExam".Users;
@@ -65,29 +65,13 @@ CREATE TABLE "CodingExam".QuestionAnswer
 	AnswerText VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE "CodingExam".Student
-(
-	StudentID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	CanvasStudentID VARCHAR(60) NOT NULL,
-	UNIQUE(CanvasStudentID)
-);
-
-CREATE TABLE "CodingExam".StudentExam
-(
-	StudentID INT NOT NULL REFERENCES "CodingExam".Student(StudentID),
-	ExamID INT NOT NULL REFERENCES "CodingExam".Exam(ExamID),
-	ScoredPoints INT,
-	ExamScorePercent INT,
-	PRIMARY KEY (StudentID, ExamID)
-);
-
 CREATE TABLE "CodingExam".StudentResponse
 (
 	StudentResponseID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	StudentID INT NOT NULL REFERENCES "CodingExam".Student(StudentID),
 	IsTextResponse BOOLEAN NOT NULL,
 	TextResponse VARCHAR(300), 
-	AnswerResponse INT
+	AnswerResponse INT,
+	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID)
 	--need to add check constraint for bool value
 );
 
