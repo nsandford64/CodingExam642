@@ -1,3 +1,4 @@
+//Copyright 2022 under MIT License
 import { ReportHandler } from "web-vitals"
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {

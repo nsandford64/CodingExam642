@@ -1,11 +1,12 @@
+--Copyright 2022 under MIT License
 SET search_path TO 'CodingExam';
 
 DROP TABLE IF EXISTS "CodingExam".CourseUser;
 DROP TABLE IF EXISTS "CodingExam".StudentExam;
+DROP TABLE IF EXISTS "CodingExam".StudentResponse;
 DROP TABLE IF EXISTS "CodingExam".QuestionAnswer;
 DROP TABLE IF EXISTS "CodingExam".ExamQuestion;
 DROP TABLE IF EXISTS "CodingExam".QuestionType;
-DROP TABLE IF EXISTS "CodingExam".StudentResponse;
 DROP TABLE IF EXISTS "CodingExam".Student;
 DROP TABLE IF EXISTS "CodingExam".Exam;
 DROP TABLE IF EXISTS "CodingExam".Users;
@@ -62,32 +63,17 @@ CREATE TABLE "CodingExam".QuestionAnswer
 	AnswerID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID),
 	CorrectAnswer BOOLEAN NOT NULL,
+	AnswerIndex INT NOT NULL,
 	AnswerText VARCHAR(30) NOT NULL
-);
-
-CREATE TABLE "CodingExam".Student
-(
-	StudentID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	CanvasStudentID VARCHAR(60) NOT NULL,
-	UNIQUE(CanvasStudentID)
-);
-
-CREATE TABLE "CodingExam".StudentExam
-(
-	StudentID INT NOT NULL REFERENCES "CodingExam".Student(StudentID),
-	ExamID INT NOT NULL REFERENCES "CodingExam".Exam(ExamID),
-	ScoredPoints INT,
-	ExamScorePercent INT,
-	PRIMARY KEY (StudentID, ExamID)
 );
 
 CREATE TABLE "CodingExam".StudentResponse
 (
 	StudentResponseID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	StudentID INT NOT NULL REFERENCES "CodingExam".Student(StudentID),
 	IsTextResponse BOOLEAN NOT NULL,
 	TextResponse VARCHAR(300), 
-	AnswerResponse INT
+	AnswerResponse INT,
+	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID)
 	--need to add check constraint for bool value
 );
 
@@ -109,5 +95,5 @@ VALUES ('True or False');
 INSERT INTO "CodingExam".ExamQuestion(QuestionText, HasCorrectAnswers, QuestionType, ExamID)
 VALUES ('What''s the best programming language?', TRUE, 1, 1);
 
-INSERT INTO "CodingExam".QuestionAnswer(QuestionID, CorrectAnswer, AnswerText)
-VALUES (1, TRUE, 'C#'), (1, TRUE, 'C'), (1, TRUE, 'TypeScript'), (1, TRUE, 'Fortran');
+INSERT INTO "CodingExam".QuestionAnswer(QuestionID, CorrectAnswer, AnswerIndex, AnswerText)
+VALUES (1, TRUE, 0, 'C#'), (1, TRUE, 1, 'C'), (1, TRUE, 2, 'TypeScript'), (1, TRUE, 3, 'Fortran');
