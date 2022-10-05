@@ -10,14 +10,13 @@ const router = express.Router();
 /* Handles a POST request from the LTI consumer, in this case Canvas */
 router.post('/', (req, res, next) => {
     const provider = new lti.Provider('Codekey', 'Keysecret');
-    req.connection.encrypted = true;
     console.log("made it inside the lti handler");
     provider.valid_request(req, (err, isValid) => {
         if (!isValid) {
             console.log("request was not valid");
         }
         else {
-            res.send("Hello World!");
+            console.log("request was valid");
         }
     })
 });
