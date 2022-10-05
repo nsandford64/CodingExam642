@@ -13,7 +13,6 @@ const StyledApp = styled.div`
 `
 
 const App = React.memo(() => {
-
 	const [ answers, setAnswers ] = React.useState( [] as number[] )
 	const [ state, setState ] = React.useState( "" )
 
