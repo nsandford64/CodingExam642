@@ -3,28 +3,53 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require( "pg" )
 
+const credentials = {
+	user: "postgres",
+	host: "localhost",
+	database: "CodingExam",
+	password: "password",
+	port: 5432
+}
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  	res.send( req )
+router.get('/questions', async function(req, res, next) {
+  	const pool = new Pool(credentials)
+
+	const results = await pool.query( `
+		SELECT *
+		FROM "CodingExam".ExamQuestion EQ
+		INNER JOIN "CodingExam".QuestionAnswer QA ON QA.QuestionID = EQ.QuestionID
+		WHERE ExamID = ${req.headers.examid}
+		ORDER BY QA.AnswerIndex
+	`)
+
+	await pool.end()
+
+	res.send( {
+		id: results.rows[0].questionid,
+		text: results.rows[0].questiontext,
+		answers: results.rows.map( row => row.answertext )
+	} )
 });
 
 router.post('/', async (req, res) => {
-	const credentials = {
-		user: "postgres",
-		host: "localhost",
-		database: "CodingExam",
-		password: "password",
-		port: 5432
-	}
-
 	const pool = new Pool(credentials)
-	const now = await pool.query( "SELECT * FROM \"CodingExam\".Exam" )
+
+	await pool.query( `
+		INSERT INTO "CodingExam".StudentResponse(IsTextResponse, AnswerResponse, QuestionID)
+		VALUES (FALSE, ${req.body.answer}, ${req.body.questionID});
+	` )
+
+	const results = await pool.query( `
+		SELECT *
+		FROM "CodingExam".StudentResponse
+		WHERE QuestionID = ${req.body.questionID};
+	` )
+
 	await pool.end()
 
-	console.log( now.rows )
-
 	res.send({
-		answer: `You requested: ${req.body.answer}`
+		answer: `You requested: ${results.rows[results.rows.length - 1].answerresponse}`
 	})
 });
 

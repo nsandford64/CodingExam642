@@ -13,17 +13,37 @@ const StyledApp = styled.div`
 `
 
 const App = React.memo(() => {
+	const [ questionID, setQuestionID ] = React.useState( -1 )
+	const [ questions, setQuestions ] = React.useState( [] as Question[] )
 	const [ answers, setAnswers ] = React.useState( [] as number[] )
 	const [ state, setState ] = React.useState( "" )
 
-	const callApi = React.useCallback( async () => {
+	React.useEffect( () => {
+		const initQuestions = async () => {
+			const data = await fetch( "http://localhost:9000/api/questions", {
+				headers: {
+					"examID": "1"
+				} 
+			} )
+
+			const question: Question = await data.json()
+
+			setQuestionID( question.id )
+			setQuestions( prev => [...prev, question] )
+		}
+
+		initQuestions()
+	}, [] )
+
+	const submit = React.useCallback( async () => {
 		const res = await fetch( "http://localhost:9000/api", {
 			// Adding method type
 			method: "POST",
      
 			// Adding body or contents to send
 			body: JSON.stringify({
-				answer: answers[0]
+				answer: answers[0],
+				questionID: questionID
 			}),
      
 			// Adding headers to the request
@@ -47,20 +67,24 @@ const App = React.memo(() => {
 	return (
 		<StyledApp>
 			<h1>{state}</h1>
-			<TrueFalse
-				question="What's the best programming language?"
-				answers={[
-					"C#",
-					"C",
-					"TypeScript",
-					"Fortran"
-				]}
-				setAnswer={setAnswer}
-			/>
-			<Button intent={Intent.PRIMARY} onClick={callApi} text="Submit" />
+			{questions.map( ( question, index ) => (
+				<TrueFalse
+					key={index}
+					question={question.text || ""}
+					answers={question.answers || []}
+					setAnswer={setAnswer}
+				/>
+			))}
+			<Button intent={Intent.PRIMARY} onClick={submit} text="Submit" />
 		</StyledApp>
 	)
 } )
 App.displayName = "App"
 
 export default App
+
+type Question = {
+	id: number
+	text: string
+	answers: string[] 
+}
