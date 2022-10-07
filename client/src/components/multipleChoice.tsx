@@ -3,20 +3,35 @@ import { Radio, RadioGroup } from "@blueprintjs/core"
 import * as React from "react"
 import styled from "styled-components"
 
-interface TrueFalseProps {
+/**
+ * Props for MultipleChoice component
+ */
+interface MultipleChoiceProps {
     question: string
     answers: string[]
     setAnswer: (index: number ) => void
 }
 
-const StyledTrueFalse = styled.div`
+/**
+ * Style to wrap the MultipleChoice component
+ */
+const StyledMultipleChoice = styled.div`
     padding: 20px;
 `
 
-export const TrueFalse = React.memo( ( props: TrueFalseProps ) => {
+/**
+ * MultipleChoice component
+ * 
+ * This component presents the student with a question and 
+ * gives them multiple answer options based on the incoming
+ * "answers" prop. 
+ */
+export const MultipleChoice = React.memo( ( props: MultipleChoiceProps ) => {
 
+	/* Keeps track of the index that is currently selected */
 	const [ index, setIndex ] = React.useState( -1 )
 
+	/* Updates the index selected by the user */
 	const handleChange = React.useCallback( ( e: React.FormEvent<HTMLInputElement> )  => {
 		const value = parseInt( (e.target as HTMLInputElement).value )
 
@@ -24,8 +39,9 @@ export const TrueFalse = React.memo( ( props: TrueFalseProps ) => {
 		props.setAnswer( value )
 	}, [props] )
 
+	/* Render the component */
 	return (
-		<StyledTrueFalse>
+		<StyledMultipleChoice>
 			<RadioGroup
 				label={props.question}
 				onChange={handleChange}
@@ -35,7 +51,7 @@ export const TrueFalse = React.memo( ( props: TrueFalseProps ) => {
 					<Radio key={index} label={answer} value={index} />
 				) )}
 			</RadioGroup>
-		</StyledTrueFalse>
+		</StyledMultipleChoice>
 	)
 } )
-TrueFalse.displayName = "TrueFalse"
+MultipleChoice.displayName = "MultipleChoice"

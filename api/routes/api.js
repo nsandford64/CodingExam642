@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require( "pg" )
 
+/* Sample credentials for PostGres database */
 const credentials = {
 	user: "postgres",
 	host: "localhost",
@@ -11,7 +12,9 @@ const credentials = {
 	port: 5432
 }
 
-/* GET users listing. */
+/**
+ * Get a list of questions from the requested examid
+ */
 router.get('/questions', async function(req, res, next) {
   	const pool = new Pool(credentials)
 
@@ -25,6 +28,7 @@ router.get('/questions', async function(req, res, next) {
 
 	await pool.end()
 
+	/* Sends a question object to the requester */
 	res.send( {
 		id: results.rows[0].questionid,
 		text: results.rows[0].questiontext,
@@ -32,6 +36,9 @@ router.get('/questions', async function(req, res, next) {
 	} )
 });
 
+/**
+ * Inserts an answer into the StudentResponse table in the database
+ */
 router.post('/', async (req, res) => {
 	const pool = new Pool(credentials)
 
@@ -48,6 +55,7 @@ router.post('/', async (req, res) => {
 
 	await pool.end()
 
+	/* Respond a success message to the poster */
 	res.send({
 		answer: `You requested: ${results.rows[results.rows.length - 1].answerresponse}`
 	})
