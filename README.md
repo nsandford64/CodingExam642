@@ -1,3 +1,2 @@
 # CodingExam642
-
-Documentation can be found in the Documentation folder
+Code Documentation can be found in the *Documentation* folder above.
