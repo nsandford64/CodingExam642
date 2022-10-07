@@ -73,8 +73,7 @@ CREATE TABLE "CodingExam".StudentResponse
 	IsTextResponse BOOLEAN NOT NULL,
 	TextResponse VARCHAR(300), 
 	AnswerResponse INT,
-	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID),
-	UNIQUE(QuestionID, AnswerResponse)
+	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID)
 	--need to add check constraint for bool value
 );
 
