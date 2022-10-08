@@ -5,7 +5,7 @@ const { Pool } = require( "pg" )
 
 /* Sample credentials for PostGres database */
 const credentials = {
-	user: "postgres",
+	user: "codingexam",
 	host: "localhost",
 	database: "CodingExam",
 	password: "password",

@@ -1,16 +1,13 @@
 --Copyright 2022 under MIT License
 SET search_path TO 'CodingExam';
 
-DROP TABLE IF EXISTS "CodingExam".CourseUser;
-DROP TABLE IF EXISTS "CodingExam".StudentExam;
 DROP TABLE IF EXISTS "CodingExam".StudentResponse;
 DROP TABLE IF EXISTS "CodingExam".QuestionAnswer;
 DROP TABLE IF EXISTS "CodingExam".ExamQuestion;
 DROP TABLE IF EXISTS "CodingExam".QuestionType;
-DROP TABLE IF EXISTS "CodingExam".Student;
+DROP TABLE IF EXISTS "CodingExam".UserExam;
 DROP TABLE IF EXISTS "CodingExam".Exam;
 DROP TABLE IF EXISTS "CodingExam".Users;
-DROP TABLE IF EXISTS "CodingExam".Course;
 
 CREATE TABLE "CodingExam".Users
 (
@@ -19,27 +16,20 @@ CREATE TABLE "CodingExam".Users
 	UNIQUE(CanvasUserID)
 );
 
-CREATE TABLE "CodingExam".Course
-(
-	CourseID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	CanvasCourseID VARCHAR(60) NOT NULL,
-	UNIQUE(CanvasCourseID)
-);
-
-CREATE TABLE "CodingExam".CourseUser
-(
-	CourseID INT NOT NULL REFERENCES "CodingExam".Course(CourseID),
-	UserID INT NOT NULL REFERENCES "CodingExam".Users(UserID),
-	PRIMARY KEY(CourseID, UserID)
-);
-
 CREATE TABLE "CodingExam".Exam
 (
 	ExamID INT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	CourseID INT NOT NULL REFERENCES "CodingExam".Course(CourseID),
 	CanvasExamID VARCHAR(60) NOT NULL,
 	TotalPoints INT NOT NULL,
 	UNIQUE(CanvasExamID)
+);
+
+CREATE TABLE "CodingExam".UserExam
+(
+	UserID INT NOT NULL REFERENCES "CodingExam".Users(UserID),
+	ExamID INT NOT NULL REFERENCES "CodingExam".Exam(ExamID),
+	ScoredPoints INT,
+	PRIMARY KEY(ExamID, UserID)
 );
 
 CREATE TABLE "CodingExam".QuestionType
@@ -55,7 +45,6 @@ CREATE TABLE "CodingExam".ExamQuestion
 	HasCorrectAnswers BOOLEAN NOT NULL,
 	QuestionType INT NOT NULL REFERENCES "CodingExam".QuestionType(QuestionTypeID),
 	ExamID INT NOT NULL REFERENCES "CodingExam".Exam(ExamID)
-	--might need something for multiple answer and checking that it has one related row in the question answer table
 );
 
 CREATE TABLE "CodingExam".QuestionAnswer
@@ -74,23 +63,24 @@ CREATE TABLE "CodingExam".StudentResponse
 	TextResponse VARCHAR(300), 
 	AnswerResponse INT,
 	QuestionID INT NOT NULL REFERENCES "CodingExam".ExamQuestion(QuestionID)
-	--need to add check constraint for bool value
 );
+
+CREATE USER codingexam WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE "CodingExam" to codingexam;
+GRANT USAGE ON SCHEMA "CodingExam" TO codingexam;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA "CodingExam" TO codingexam;
 
 INSERT INTO "CodingExam".Users(CanvasUserID)
 VALUES ('abcdefg1234567');
 
-INSERT INTO "CodingExam".Course(CanvasCourseID)
-VALUES ('abcdef123456');
+INSERT INTO "CodingExam".Exam(CanvasExamID, TotalPoints)
+VALUES ('12345abcde', 1);
 
-INSERT INTO "CodingExam".CourseUser(CourseID, UserID)
+INSERT INTO "CodingExam".UserExam(UserID, ExamID)
 VALUES (1, 1);
 
-INSERT INTO "CodingExam".Exam(CourseID, CanvasExamID, TotalPoints)
-VALUES (1, '12345abcde', 1);
-
 INSERT INTO "CodingExam".QuestionType(QuestionType)
-VALUES ('True or False');
+VALUES ('Multiple Choice');
 
 INSERT INTO "CodingExam".ExamQuestion(QuestionText, HasCorrectAnswers, QuestionType, ExamID)
 VALUES ('What''s the best programming language?', TRUE, 1, 1);
