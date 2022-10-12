@@ -2,8 +2,15 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const lti = require('ims-lti');
+const path = require('path');
 
 const router = express.Router();
+
+router.get('/', (req, res, next) => {
+    console.log("made it inside get");
+    res.sendFile(path.join(__dirname, "../../../client/build/index.html"));
+})
+
 
 /* Handles a POST request from the LTI consumer, in this case Canvas */
 router.post('/', (req, res, next) => {
@@ -19,9 +26,11 @@ router.post('/', (req, res, next) => {
             console.log("request was not valid");
         }
         else {
-            res.send("Hello World!");
+            console.log("Hello World!");
+            res.setHeader("content-type", "text/html");
+            res.sendFile(path.join(__dirname, "../../../client/build/index.html"));
         }
-    })
+    });
 });
 
 module.exports = router;
